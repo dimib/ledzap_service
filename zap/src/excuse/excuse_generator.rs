@@ -14,15 +14,15 @@ pub async fn generate_excuse(persona: String, topic: String, num_words: i64) -> 
 
     let m0 = OpenaiChatMessage {
         role: "user".to_string(),
-        content: format!("Antworte als {}", persona).to_string(),
+        content: format!("Antworte als \"{}\"", persona).to_string(),
     };
     let m1 = OpenaiChatMessage {
         role: "user".to_string(),
-        content: format!("Schreibe faule Ausrede für {}", topic).to_string(),
+        content: format!("Schreibe eine faule Ausrede für \"{}\"", topic).to_string(),
     };
     let m2 = OpenaiChatMessage {
         role: "user".to_string(),
-        content: format!("Maximal {} Worte", num_words).to_string(),
+        content: format!("Maximal {} Worte ohne newline", num_words).to_string(),
     };
     let messages = vec![m0, m1, m2];
 
