@@ -30,6 +30,8 @@ pub async fn get_personas() -> (Status, Value) {
 #[get("/<persona>", format = "json")]
 pub async fn get_persona(persona: String) -> (Status, Value) {
 
+    print!("Persona: {:?}", persona);
+
     let presets = load_presets().or_else(|error| {
         println!("Error loading presets: {}", error);
         Err(Status::InternalServerError)
