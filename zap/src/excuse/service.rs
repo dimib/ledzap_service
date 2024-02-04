@@ -1,13 +1,11 @@
 
 use rocket::serde::json::{Value, json};
 use rocket::http::Status;
-//use rocket::State;
 use rocket::Request;
 
 use crate::excuse::model::{ExcuseResponse, ExcuseRequest};
 use crate::excuse::api_keys::ApiKey;
 use super::excuse_generator;
-
 
 /**
  * This is the handler for the GET /excuse endpoint.
@@ -77,6 +75,8 @@ pub async fn post_excuse_as_json(excuse_request: ExcuseRequest) -> (Status, Valu
         }
     }
 }
+
+
 
 #[catch(401)]
 pub fn not_unauthorized(_req: &Request) -> String {

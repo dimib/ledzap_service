@@ -1,0 +1,16 @@
+{
+    "presets": [
+        {
+            "persona": "Schüler",
+            "excuses": ["Hausaufgaben", "Klassenarbeit", "Schlechte Noten", "Krankheit"]
+        },
+        {
+            "persona": "Lehrer",
+            "excuses": ["Klassenarbeit", "Stau", "Familie"]
+        },
+        {
+            "persona": "Rapper",
+            "excuses": ["Hausaufgaben", "Schlechte Note", "Klassenarbeit"]
+        }
+    ]
+}
