@@ -1,8 +1,24 @@
 {
     "presets": [
         {
-            "persona": "Schüler",
+            "persona": "Programmierer",
+	    "excuses": ["Schlechter Code","Bier_um_4 Praesentation","Viele Bugs","Sprintziel nicht erreicht"]
+        },
+        {
+            "persona": "Schueler",
             "excuses": ["Hausaufgaben", "Klassenarbeit", "Schlechte Noten", "Krankheit"]
+        },
+        {
+            "persona": "Autofahrer",
+            "excuses": ["Parkzeit ueberschritten", "Zu schnell gefahren", "Lichthupe", "Nicht geblinkt"]
+        },
+        {
+            "persona": "Arzt",
+            "excuses": ["Falschen Arm amputiert", "Lange Wartezeit", "nicht zustaendig", "zweite Meinung", "lieber golf spielen"]
+        },
+        {
+            "persona": "Politiker",
+            "excuses": ["keine Rente", "schlechtes Wahlergebnis", "5 Prozent", "Keine Erinnerung", "CUM-EX"]
         },
         {
             "persona": "Lehrer",
