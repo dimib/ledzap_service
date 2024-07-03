@@ -11,7 +11,7 @@ use super::excuse_generator;
  * This is the handler for the GET /excuse endpoint.
  */
 #[get("/?<persona>&<topic>&<num_words>", format = "json")]
-pub async fn get_excuse_as_json(_key: ApiKey<'_>, persona: Option<String>, topic: Option<String>, num_words: Option<i64>) -> (Status, Value) {
+pub async fn get_excuse_as_json(_key: ApiKey, persona: Option<String>, topic: Option<String>, num_words: Option<i64>) -> (Status, Value) {
 
     let persona = match persona {
         Some(p) => p,
