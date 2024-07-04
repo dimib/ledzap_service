@@ -1,12 +1,12 @@
 
 use yew::prelude::*;
 use web_sys::HtmlInputElement;
-use crate::tools::logger::log;
 
 #[derive(Clone, Properties, PartialEq)]
 pub struct InputfieldProps {
     pub label: AttrValue,
     pub text: AttrValue,
+    pub hint: AttrValue,
     pub onchange: Callback<String>,
 }
 
@@ -26,7 +26,6 @@ pub fn Inputfield(props: &InputfieldProps) -> Html {
                 let new_value = input.value();
                 input_value_handle.set(new_value.clone());
                 my_props.onchange.emit(new_value.clone());
-                log(&format!("Input value: {}", new_value.clone()));
             }
         })
     };
@@ -36,6 +35,7 @@ pub fn Inputfield(props: &InputfieldProps) -> Html {
             <label for="input">{ props.label.clone() }</label>
             <input type="text"
                 id="input"
+                hint={ props.hint.clone() }
                 onchange={ on_change }
                 value={ input_value.clone() }
             />

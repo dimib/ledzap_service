@@ -1,13 +1,17 @@
-
 use std::rc::Rc;
 
 use yew::prelude::*;
 
+use gloo_net::http::{Request, Headers};
+use wasm_bindgen_futures::spawn_local;
+
 mod components;
 mod tools;
+mod client;
 
 use crate::tools::logger::log;
 use crate::components::inputfield::Inputfield;
+use crate::client::model::ExcuseResponse;
 
 struct MainComponent {
     persona: String,
@@ -67,20 +71,24 @@ impl Component for MainComponent {
         html! {
             <div class="main">
                 <h1>{"LED ZAP!"}</h1>
-                <Inputfield label="Persona" 
+                <Inputfield label="Persona"
+                            hint="Schlechter Schüler"
                             text={ ctx.props().persona.clone() }
                             onchange={ ctx.link().callback(move |persona: String| MainMsg::UpdatePersona(AttrValue::from(persona))) }
                 />
                 <Inputfield label="Excuse for"
+                            hint="Keine Hausaufgaben"
                             text={ ctx.props().excuse_for.clone() }
                             onchange={ ctx.link().callback(move |excuse_for: String| MainMsg::UpdateExcuseFor(AttrValue::from(excuse_for))) }
                 />
                 <div class="excuse_field">
-                <div>{ format!("{}", self.excuse) }</div>
+                    <div>{ format!("{}", self.excuse) }</div>
                 </div>
-                <button class="primary_button" onclick={ ctx.link().callback(|_| MainMsg::GenerateExcuse) }>
-                    {"Generate lame excuse"}
-                </button>
+                <div>
+                    <button class="primary_button" onclick={ ctx.link().callback(|_| MainMsg::GenerateExcuse) }>
+                        {"Generate lame excuse"}
+                    </button>
+                </div>
             </div>
         }
     }
@@ -141,6 +149,7 @@ impl Reducible for MainState {
     }
 }
 
+
 #[function_component]
 fn MainFunctionComponent() -> Html {
 
@@ -166,8 +175,25 @@ fn MainFunctionComponent() -> Html {
     let on_generate_excuse = {
         let rcx = Rc::clone(&rc);
         Callback::from(move |_e: MouseEvent| {
-            let excuse = format!("{} is sorry for the {}", rcx.persona, rcx.excuse_for);
-            rcx.dispatch(MainStateAction::GenerateExcuse(excuse));
+            let query = [("persona", rcx.persona.clone()), ("topic", rcx.excuse_for.clone())];
+            let headers = Headers::new();
+            headers.append("x-api-key", "abxx-1234-5678-9abc");
+
+            let rcx2 = Rc::clone(&rcx);
+
+            spawn_local(async move {
+                let excuse: ExcuseResponse = Request::get("http://127.0.0.1:3003/excuse/")
+                    .query(query)
+                    .header("x-api-key", "abxx-1234-5678-9abc")
+                    .send()
+                    .await
+                    .unwrap()
+                    .json()
+                    .await
+                    .unwrap();
+                log(&format!("Excuse: {}", excuse.excuse.clone()));
+                rcx2.dispatch(MainStateAction::GenerateExcuse(excuse.excuse.clone()));
+            });
             ()
         })
     };
@@ -176,10 +202,12 @@ fn MainFunctionComponent() -> Html {
         <div class="main">
             <h1>{"LED ZAP!"}</h1>
             <Inputfield label="Persona" 
+                        hint="Schlechter Schüler"
                         text={ rc.persona.clone() }
                         onchange={ on_persona_change }
             />
             <Inputfield label="Excuse for"
+                        hint="Keine Hausaufgaben"
                         text={ rc.excuse_for.clone() }
                         onchange={ on_excuse_for_change }
             />

@@ -56,5 +56,7 @@ h1 {
 
 .excuse_field div {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: italic;
     padding: 10px;
+    min-height: 2em;
 }
