@@ -13,94 +13,6 @@ use crate::tools::logger::log;
 use crate::components::inputfield::Inputfield;
 use crate::client::model::ExcuseResponse;
 
-struct MainComponent {
-    persona: String,
-    excuse_for: String,
-    excuse: String,
-}
-
-enum MainMsg {
-    UpdatePersona(AttrValue),
-    UpdateExcuseFor(AttrValue),
-    GenerateExcuse,
-}
-
-#[derive(Default, Clone, Properties, PartialEq)]
-struct MainProperties {
-    pub persona: AttrValue,
-
-    pub excuse_for: AttrValue,
-
-    pub excuse: AttrValue,
-}
-
-impl Component for MainComponent {
-    type Message = MainMsg;
-    type Properties = MainProperties;
-
-    fn create(ctx: &Context<Self>) -> Self {
-        Self {
-            persona: ctx.props().persona.to_string(), 
-            excuse_for: ctx.props().excuse_for.to_string(), 
-            excuse: ctx.props().excuse.to_string() 
-        }
-    }
-
-    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
-        match msg {
-            MainMsg::UpdatePersona(persona) => {
-                log(&format!("Persona: {}", persona.to_string()));
-                self.persona = persona.to_string();
-                true
-            }
-            MainMsg::UpdateExcuseFor(excuse_for) => {
-                log(&format!("Excuse for: {}", excuse_for.to_string()));
-                self.excuse_for = excuse_for.to_string();
-                true
-            }
-            MainMsg::GenerateExcuse => {
-                log(&format!("{} is sorry for the {}", self.persona, self.excuse_for));
-                self.excuse = self.generate_excuse();
-                true
-            }
-        }
-    }
-
-    fn view(&self, ctx: &Context<Self>) -> Html {
-
-        html! {
-            <div class="main">
-                <h1>{"LED ZAP!"}</h1>
-                <Inputfield label="Persona"
-                            hint="Schlechter Schüler"
-                            text={ ctx.props().persona.clone() }
-                            onchange={ ctx.link().callback(move |persona: String| MainMsg::UpdatePersona(AttrValue::from(persona))) }
-                />
-                <Inputfield label="Excuse for"
-                            hint="Keine Hausaufgaben"
-                            text={ ctx.props().excuse_for.clone() }
-                            onchange={ ctx.link().callback(move |excuse_for: String| MainMsg::UpdateExcuseFor(AttrValue::from(excuse_for))) }
-                />
-                <div class="excuse_field">
-                    <div>{ format!("{}", self.excuse) }</div>
-                </div>
-                <div>
-                    <button class="primary_button" onclick={ ctx.link().callback(|_| MainMsg::GenerateExcuse) }>
-                        {"Generate lame excuse"}
-                    </button>
-                </div>
-            </div>
-        }
-    }
-}
-
-impl MainComponent {
-    fn generate_excuse(&self) -> String {
-        let excuse = format!("{} is sorry for the {}", self.persona, self.excuse_for);
-        excuse
-    }
-}
-
 // -- Main Function Component --
 
 struct MainState {
@@ -212,11 +124,13 @@ fn MainFunctionComponent() -> Html {
                         onchange={ on_excuse_for_change }
             />
             <div class="excuse_field">
-            <div>{ format!("{}", rc.excuse.clone().to_string()) }</div>
+                <div>{ format!("{}", rc.excuse.clone().to_string()) }</div>
             </div>
-            <button class="primary_button" onclick={ on_generate_excuse }>
-                {"Generate lame excuse"}
-            </button>
+            <div class="button_area">
+                <button class="primary_button" onclick={ on_generate_excuse }>
+                    {"Generate lame excuse"}
+                </button>
+            </div>
         </div>
     }
 }
