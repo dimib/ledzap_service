@@ -1,7 +1,5 @@
 use rocket::{http::Status, request::{FromRequest, Outcome}, Request};
 
-
-
 pub fn api_key() -> String {
     "abxx-1234-5678-9abc".to_string()
 }
@@ -11,7 +9,7 @@ pub fn openai_key() -> String {
 }
 
 #[derive(Debug)]
-pub struct ApiKey<'r>(&'r str);
+pub struct ApiKey(());
 
 #[derive(Debug)]
 pub enum ApiKeyError {
@@ -20,7 +18,7 @@ pub enum ApiKeyError {
 }
 
 #[rocket::async_trait]
-impl<'r> FromRequest<'r> for ApiKey<'r> {
+impl<'r> FromRequest<'r> for ApiKey {
     type Error = ApiKeyError;
 
     async fn from_request(req: &'r Request<'_>) -> Outcome<Self, Self::Error> {
@@ -31,7 +29,7 @@ impl<'r> FromRequest<'r> for ApiKey<'r> {
 
         match req.headers().get_one("x-api-key") {
             None => Outcome::Error((Status::Unauthorized, ApiKeyError::Missing)),
-            Some(key) if is_valid(key) => Outcome::Success(ApiKey(key)),
+            Some(key) if is_valid(key) => Outcome::Success(ApiKey(())),
             Some(_) => Outcome::Error((Status::Unauthorized, ApiKeyError::Invalid)),
         }
     }
